@@ -210,7 +210,7 @@ def bitopro_websocket_test():
     bito_websocket_trades.init_websocket()
     bito_websocket_trades.start()
 
-    """ private websocket has not open 
+    """ private websocket has not opened 
 
     # [Private] GET active orders
     bito_websocket_order_book = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/auth/orders", websocket_handler)
