@@ -38,8 +38,6 @@ class BitoproExWebsocket():
         self.callback(message)
 
     def __on_close(self, ws):
-        log_message = f"{self.self.__connect_endpoint} closed connection, reconnecting...\n"
-        logger.info(log_message)
         self._set_websocket()
         self.wst.start()
 
