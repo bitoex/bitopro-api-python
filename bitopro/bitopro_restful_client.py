@@ -7,6 +7,10 @@ import hashlib
 import base64
 import time
 
+class OrderType(Enum):
+    Limit = 0,
+    Market = 1
+
 class OrderStatus(Enum):
     NotTriggered = -1
     InProgress = 0
@@ -222,7 +226,7 @@ class BitoproRestfulClient(object):
         headers = self.build_headers(params=orders_request)
         return self.send_request("PUT", complete_url, headers=headers, data=orders_request)
 
-    def create_an_order(self, action:str, amount:float, price:float=None, type:str="LIMIT", pair:str=None, stop_price:float=None, condition:str=None, time_in_force:TimeInForce=TimeInForce.GTC, client_id:int=None):
+    def create_an_order(self, action:str, amount:float, price:float=None, type:OrderType=OrderType.Limit, pair:str=None, stop_price:float=None, condition:str=None, time_in_force:TimeInForce=TimeInForce.GTC, client_id:int=None):
         """
         https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/create-order.md
         :param pair: the trading pair in format.
@@ -243,7 +247,7 @@ class BitoproRestfulClient(object):
             **{"amount": str(amount)},
             **({"price": str(price)} if price is not None else {}),
             **{"timestamp": self.get_current_timestamp()},
-            **{"type": type},
+            **{"type": type.name},
             **({"stopPrice": str(stop_price)} if stop_price is not None else {}),
             **({"condition": condition} if condition is not None else {}),
             **({"timeInForce": time_in_force.name} if time_in_force is not None else {}),
