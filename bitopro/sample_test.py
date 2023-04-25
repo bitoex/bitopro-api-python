@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
+from bitopro_util import build_headers, get_current_timestamp
 from bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin, OrderStatus, WithdrawProtocol
 from bitopro_websocket_client import BitoproExWebsocket, BitoproWebsocketEndpoint
 
-
+account = ""
 apiKey = ""
 apiSecret = ""
 
@@ -86,7 +87,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -94,7 +95,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -102,7 +103,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -110,7 +111,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -118,7 +119,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -126,7 +127,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -134,7 +135,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -142,7 +143,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -150,7 +151,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     batch_orders[pair].append({
@@ -158,7 +159,7 @@ def bitopro_restful_test():
                 **{"action": "BUY"},
                 **{"amount": str(0.0001)},
                 **({"price": str(10500)}),
-                **{"timestamp": bitopro_client.get_current_timestamp()},
+                **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
              })
     create_batch_orders_response = bitopro_client.create_batch_order(batch_orders[pair])
@@ -209,26 +210,32 @@ def bitopro_websocket_test():
     bito_websocket_trades = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/trades/eth_btc", websocket_handler)
     bito_websocket_trades.init_websocket()
     bito_websocket_trades.start()
-
-    """ private websocket has not opened 
-
+    
     # [Private] GET active orders
-    bito_websocket_order_book = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/auth/orders", websocket_handler)
+    bito_websocket_order_book = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/auth/orders", websocket_handler, account, apiKey, apiSecret)
     bito_websocket_order_book.init_websocket()
     bito_websocket_order_book.start()
 
     # [Private] GET account balance
-    bito_websocket_order_book = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/auth/account-balance", websocket_handler)
+    bito_websocket_order_book = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/auth/account-balance", websocket_handler, account, apiKey, apiSecret)
     bito_websocket_order_book.init_websocket()
     bito_websocket_order_book.start()
     
-    """
+    
 
 def websocket_handler(message:str):
     reply = json.loads(message)
-    print(reply)
-    print()
-
+    if reply["event"] == "ACCOUNT_BALANCE":
+        print(reply, end="\n\n")
+    elif reply["event"] == "ACTIVE_ORDERS":
+        print(reply, end="\n\n")
+    elif reply["event"] == "ORDER_BOOK":
+        print(reply, end="\n\n")
+    elif reply["event"] == "TICKER":
+        print(reply, end="\n\n")
+    elif reply["event"] == "TRADE":
+        print(reply, end="\n\n")
+        
 if __name__ == "__main__":
     bitopro_restful_test()
     bitopro_websocket_test()

@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from enum import Enum
 import requests
-import json
-import hmac
-import hashlib
-import base64
-import time
+
+from bitopro_util import build_headers, get_current_timestamp
 
 class OrderType(Enum):
     Limit = 0,
@@ -53,22 +50,6 @@ class BitoproRestfulClient(object):
         self.baseUrl = "https://api.bitopro.com/v3"
         self.__api_key:str = api_key
         self.__api_secret:str = api_secret
-
-    def get_current_timestamp(self) -> int:
-        return int(time.time() * 1000)
-
-
-    def build_payload(self,params={}) -> bytes:
-        return base64.urlsafe_b64encode(json.dumps(params).encode("utf-8")).decode("utf-8")
-
-
-    def build_headers(self, params={}) -> dict:
-        signature = hmac.new(bytes(self.__api_secret, "utf-8"), bytes(self.build_payload(params), "utf-8"), hashlib.sha384,).hexdigest()
-        return {
-            "X-BITOPRO-APIKEY": self.__api_key,
-            "X-BITOPRO-PAYLOAD": self.build_payload(params),
-            "X-BITOPRO-SIGNATURE": signature,
-        }
 
     def send_request(self, method, url, headers:dict=None, data=None, timeout=None):
         try:
@@ -186,8 +167,8 @@ class BitoproRestfulClient(object):
         """
         endpoint = "/accounts/balance"
         complete_url = self.baseUrl + endpoint
-        params = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=params)
+        params = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=params)
         return self.send_request(method="GET", url=complete_url, headers=headers)
 
     def cancel_an_order(self, order_id:str, pair:str=None):
@@ -198,8 +179,8 @@ class BitoproRestfulClient(object):
         """
         endpoint = f"/orders/{pair}/{order_id}"
         complete_url = self.baseUrl + endpoint
-        params = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=params)
+        params = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=params)
         return self.send_request("DELETE", complete_url, headers=headers)
 
     def cancel_all_orders(self, pair:str=None):
@@ -210,8 +191,8 @@ class BitoproRestfulClient(object):
         """
         endpoint = f"/orders/{pair}"
         complete_url = self.baseUrl + endpoint
-        params = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=params)
+        params = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=params)
         return self.send_request("DELETE", complete_url, headers=headers)
 
     def cancel_multiple_orders(self, orders_request:dict=None):
@@ -223,7 +204,7 @@ class BitoproRestfulClient(object):
         """
         endpoint = f"/orders/"
         complete_url = self.baseUrl + endpoint
-        headers = self.build_headers(params=orders_request)
+        headers = build_headers(self.__api_key, self.__api_secret, params=orders_request)
         return self.send_request("PUT", complete_url, headers=headers, data=orders_request)
 
     def create_an_order(self, action:str, amount:float, price:float=None, type:OrderType=OrderType.Limit, pair:str=None, stop_price:float=None, condition:str=None, time_in_force:TimeInForce=TimeInForce.GTC, client_id:int=None):
@@ -246,14 +227,14 @@ class BitoproRestfulClient(object):
             **{"action": action},
             **{"amount": str(amount)},
             **({"price": str(price)} if price is not None else {}),
-            **{"timestamp": self.get_current_timestamp()},
+            **{"timestamp": get_current_timestamp()},
             **{"type": type.name},
             **({"stopPrice": str(stop_price)} if stop_price is not None else {}),
             **({"condition": condition} if condition is not None else {}),
             **({"timeInForce": time_in_force.name} if time_in_force is not None else {}),
             **({"clientId": client_id} if client_id is not None else {})
         }
-        headers = self.build_headers(params=params)
+        headers = build_headers(self.__api_key, self.__api_secret, params=params)
         return self.send_request(method="POST", url=complete_url, headers=headers, data=params)
 
     def create_batch_order(self, orders_request:list=None):
@@ -282,7 +263,7 @@ class BitoproRestfulClient(object):
         """
         endpoint = f"/orders/batch"
         complete_url = self.baseUrl + endpoint
-        headers = self.build_headers(params=orders_request)
+        headers = build_headers(self.__api_key, self.__api_secret, params=orders_request)
         return self.send_request(method="POST", url=complete_url, headers=headers, data=orders_request)
 
     def get_all_orders(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, status_kind:str="ALL", status:OrderStatus=None, order_id:str=None, limit:int=100, client_id:str=None):
@@ -309,8 +290,8 @@ class BitoproRestfulClient(object):
             **({"limit": str(limit)} if limit is not None else {}),
             **({"clientId": client_id} if client_id is not None else {}),
         }
-        header = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=header)
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers, data=params)
 
     def get_an_order(self, pair:str=None, order_id:str=None):
@@ -322,8 +303,8 @@ class BitoproRestfulClient(object):
         """   
         endpoint = f"/orders/{pair}/{order_id}"
         complete_url = self.baseUrl + endpoint
-        header = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=header)
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers)
 
     def get_trades_list(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, order_id:str=None, trade_id:str=None, limit:int=100):
@@ -346,8 +327,8 @@ class BitoproRestfulClient(object):
             **({"tradeId": trade_id} if trade_id is not None else {}),
             **({"limit": limit} if limit is not None else {}),
         }
-        header = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=header)
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers, data=params)
 
     def get_deposit_history(self, currency:str, start_timestamp:int=None, end_timestamp:int=None, limit:int=None, id:str=None, statuses:DepositStatus=None):
@@ -370,8 +351,8 @@ class BitoproRestfulClient(object):
             **({"statuses": statuses.name} if statuses is not None else {}),
             **({"limit": limit} if limit is not None else {}),
         }
-        header = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=header)
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers, data=params)
 
     def get_withdraw_history(self, currency:str, start_timestamp:int=None, end_timestamp:int=None, limit:int=None, id:str=None, statuses:DepositStatus=None):
@@ -394,8 +375,8 @@ class BitoproRestfulClient(object):
             **({"statuses": statuses.name} if statuses is not None else {}),
             **({"limit": limit} if limit is not None else {}),
         }
-        header = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=header)
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers, data=params)
 
     def get_withdraw(self, currency:str, serial:str=None):
@@ -407,8 +388,8 @@ class BitoproRestfulClient(object):
         """
         endpoint = f"/wallet/withdraw/{currency}/{serial}"
         complete_url = self.baseUrl + endpoint
-        header = {"identity": "", "nonce": self.get_current_timestamp()}
-        headers = self.build_headers(params=header)
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers)
 
     def withdraw(self, currency:str, protocol:WithdrawProtocol=WithdrawProtocol.MAIN, address:str=None, amount:float=None, message:str=None):
@@ -425,9 +406,9 @@ class BitoproRestfulClient(object):
         params = {
             **{"protocol": protocol.name},
             **({"amount": str(amount)} if amount is not None else {}),
-            **{"timestamp": self.get_current_timestamp()},
+            **{"timestamp": get_current_timestamp()},
             **({"message": message} if message is not None else {}),
         }
-        headers = self.build_headers(params=params)
+        headers = build_headers(self.__api_key, self.__api_secret, params=params)
         return self.send_request(method="POST", url=complete_url, headers=headers, data=params)
 
