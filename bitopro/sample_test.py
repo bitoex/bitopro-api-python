@@ -220,21 +220,19 @@ def bitopro_websocket_test():
     bito_websocket_order_book = BitoproExWebsocket(BitoproWebsocketEndpoint + "/v1/pub/auth/account-balance", websocket_handler, account, apiKey, apiSecret)
     bito_websocket_order_book.init_websocket()
     bito_websocket_order_book.start()
-    
-    
 
 def websocket_handler(message:str):
     reply = json.loads(message)
     if reply["event"] == "ACCOUNT_BALANCE":
-        print(reply, end="\n\n")
+        print("ACCOUNT_BALANCE: ", reply, end="\n\n")
     elif reply["event"] == "ACTIVE_ORDERS":
-        print(reply, end="\n\n")
+        print("ACTIVE_ORDERS: ", reply, end="\n\n")
     elif reply["event"] == "ORDER_BOOK":
-        print(reply, end="\n\n")
+        print("ORDER_BOOK: ", reply, end="\n\n")
     elif reply["event"] == "TICKER":
-        print(reply, end="\n\n")
+        print("TICKER: ", reply, end="\n\n")
     elif reply["event"] == "TRADE":
-        print(reply, end="\n\n")
+        print("TRADE: ", reply, end="\n\n")
         
 if __name__ == "__main__":
     bitopro_restful_test()
