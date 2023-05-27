@@ -29,10 +29,10 @@ class BitoproExWebsocket():
 
         self.__ws = websocket.WebSocketApp(
             self.__connect_endpoint,
-            on_message=lambda ws, msg: self.__on_message(ws, msg),
-            on_close=lambda ws: self.__on_close(ws),
-            on_error=lambda msg: self.__on_error(msg),
-            on_open=lambda ws: self.__on_open(ws),
+            on_message=self.__on_message,
+            on_close=self.__on_close,
+            on_error=self.__on_error,
+            on_open=self.__on_open,
             header=ws_headers
         )
         self.wst = threading.Thread(target=self.__ws.run_forever)
@@ -49,7 +49,7 @@ class BitoproExWebsocket():
     def __on_message(self, ws, message):
         self.callback(message)
 
-    def __on_close(self, ws):
+    def __on_close(self, ws, close_status_code, msg):
         self.init_websocket()
         self.wst.start()
 
