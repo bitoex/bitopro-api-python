@@ -51,9 +51,9 @@ class BitoproExWebsocket():
 
     def __on_close(self, ws, close_status_code, msg):
         self.init_websocket()
+        log_message = f"{self.__connect_endpoint} closed connection, reconnecting...\n"
+        logger.info(log_message)
         self.wst.start()
 
     def __on_error(self, ws, error):
         logger.error(error)
-        log_message = f"{self.self.__connect_endpoint} closed connection, reconnecting...\n"
-        logger.info(log_message)
