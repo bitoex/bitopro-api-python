@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import threading
+import time
 from loguru import logger
 import websocket
 from bitopro_util import build_headers,get_current_timestamp
@@ -8,52 +9,92 @@ from bitopro_util import build_headers,get_current_timestamp
 BitoproWebsocketEndpoint = "wss://stream.bitopro.com:443/ws"
 
 class BitoproExWebsocket():
-    def __init__(self, endpoint: str, callback, account:str="", api_key:str="", api_secret:str=""):
-        self.__connect_endpoint: str = endpoint
+    def __init__(self, account:str, api_key:str, api_secret:str, callback):
+        self._connect_endpoint: str = ''
         self.send_opening_message:str = ""
-        self.__account:str = account
-        self.__api_key:str = api_key
-        self.__api_secret:str = api_secret
+        self._account:str = account
+        self._api_key:str = api_key
+        self._api_secret:str = api_secret
 
         self.callback = callback 
 
-        self.__ws: websocket.WebSocketApp = None
+        self._ws: websocket.WebSocketApp = None
         self.wst: threading.Thread = None
         
     def init_websocket(self):
-        if self.__account and self.__api_key and self.__api_secret:
-            params = {"identity": self.__account, "nonce": get_current_timestamp()}
-            ws_headers = build_headers(self.__api_key, self.__api_secret, params=params)
+        if self._account and self._api_key and self._api_secret:
+            params = {"identity": self._account, "nonce": get_current_timestamp()}
+            ws_headers = build_headers(self._api_key, self._api_secret, params=params)
         else:
             ws_headers = None
 
-        self.__ws = websocket.WebSocketApp(
-            self.__connect_endpoint,
-            on_message=self.__on_message,
-            on_close=self.__on_close,
-            on_error=self.__on_error,
-            on_open=self.__on_open,
+        self._ws = websocket.WebSocketApp(
+            self._connect_endpoint,
+            on_message=self._on_message,
+            on_close=self._on_close,
+            on_error=self._on_error,
+            on_open=self._on_open,
             header=ws_headers
         )
-        self.wst = threading.Thread(target=self.__ws.run_forever)
+        self.wst = threading.Thread(target=self._ws.run_forever)
 
     def start(self):
         if self.wst != None:
             self.wst.start()
 
-    def __on_open(self, ws):
+    def _on_open(self, ws):
         if self.send_opening_message != "":
             ws.send(self._send_opening_message)
         logger.debug("connected")
 
-    def __on_message(self, ws, message):
+    def _on_message(self, ws, message):
         self.callback(message)
 
-    def __on_close(self, ws, close_status_code, msg):
+    def _on_close(self, ws, close_status_code, msg):
         self.init_websocket()
-        log_message = f"{self.__connect_endpoint} closed connection, reconnecting...\n"
+        log_message = f"{self._connect_endpoint} closed connection, reconnecting...\n"
         logger.info(log_message)
+        time.sleep(3)
         self.wst.start()
 
-    def __on_error(self, ws, error):
+    def _on_error(self, ws, error):
         logger.error(error)
+
+class BitoproOrderBookWs(BitoproExWebsocket):
+    def __init__(self, symbols_limit: dict, callback):
+        super().__init__("", "", "", callback)
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/order-books/"
+        for symbol, limit in symbols_limit.items():
+            self._connect_endpoint = self._connect_endpoint + f"{str.lower(symbol)}:{limit},"
+        self._connect_endpoint = self._connect_endpoint[:-1]  # remove last ','
+
+class BitoproTickerkWs(BitoproExWebsocket):
+    def __init__(self, symbols: list, callback):
+        super().__init__("", "", "", callback)
+
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/tickers/"
+        for symbol in symbols:
+            self._connect_endpoint = self._connect_endpoint + f"{str.lower(symbol)},"
+        self._connect_endpoint = self._connect_endpoint[:-1]  # remove last ','
+
+class BitoproTradesWs(BitoproExWebsocket):
+    def __init__(self, symbols: list, callback):
+        super().__init__("", "", "", callback)
+
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/trades/"
+        for symbol in symbols:
+            self._connect_endpoint = self._connect_endpoint + f"{str.lower(symbol)},"
+        self._connect_endpoint = self._connect_endpoint[:-1]  # remove last ','
+
+class BitoproUserOrdersWs(BitoproExWebsocket):
+    def __init__(self, account: str, api_key: str, api_secret: str, callback):
+        super().__init__(account, api_key, api_secret, callback)
+
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/orders"
+
+class BitoproUserBlanceWs(BitoproExWebsocket):
+    def __init__(self, account: str, api_key: str, api_secret: str, callback):
+        super().__init__(account, api_key, api_secret, callback)
+
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/account-balance"
+        
