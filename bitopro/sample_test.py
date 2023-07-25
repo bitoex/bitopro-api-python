@@ -246,7 +246,7 @@ def websocket_handler(message:str):
         print("TRADE: ", reply, end="\n\n")
         
 if __name__ == "__main__":
-    # bitopro_restful_test()
+    bitopro_restful_test()
     bitopro_websocket_test()
 
     
