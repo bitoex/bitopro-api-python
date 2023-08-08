@@ -8,7 +8,7 @@ SDK for the [BitoPro](https://www.bitopro.com/) API.
 
 ```bash
 cd ~/ && git clone https://github.com/bitoex/bitopro-api-python.git
-cd ~/bitopro-api-python3 && cp bitopro/sample_test.py .
+cd ~/bitopro-api-python && cp bitopro/sample_test.py .
 
 # update API key and secret
 # vim sample_test.py
@@ -22,7 +22,8 @@ python3 sample_test.py
 cd %USERPROFILE%\Downloads
 git clone https://github.com/bitoex/bitopro-api-python.git
 
-cd ~/bitopro-api-python3 && cp bitopro/sample_test.py .
+cd bitopro-api-python
+cd bitopro
 
 # update API key and secret
 # notepad sample_test.py
