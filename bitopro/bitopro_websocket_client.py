@@ -10,7 +10,7 @@ BitoproWebsocketEndpoint = "wss://stream.bitopro.com:443/ws"
 
 class BitoproExWebsocket():
     def __init__(self, account:str, api_key:str, api_secret:str, callback):
-        self._connect_endpoint: str = ''
+        self._connect_endpoint: str = ""
         self.send_opening_message:str = ""
         self._account:str = account
         self._api_key:str = api_key
@@ -30,10 +30,10 @@ class BitoproExWebsocket():
 
         self._ws = websocket.WebSocketApp(
             self._connect_endpoint,
-            on_message=self._on_message,
-            on_close=self._on_close,
-            on_error=self._on_error,
-            on_open=self._on_open,
+            on_message=lambda ws, msg:self._on_message(ws, msg),
+            on_close=lambda ws, status_code, msg: self._on_close(ws, status_code, msg),
+            on_error=lambda ws, error:self._on_error(ws, error),
+            on_open=lambda ws: self._on_open(ws),
             header=ws_headers
         )
         self.wst = threading.Thread(target=self._ws.run_forever)
@@ -45,7 +45,7 @@ class BitoproExWebsocket():
     def _on_open(self, ws):
         if self.send_opening_message != "":
             ws.send(self._send_opening_message)
-        logger.debug("connected")
+        logger.debug(f"{self.__class__.__name__} connected")
 
     def _on_message(self, ws, message):
         self.callback(message)
