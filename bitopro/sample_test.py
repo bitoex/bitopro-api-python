@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-from bitopro_restful_client import OrderType
-from bitopro_util import build_headers, get_current_timestamp
+from bitopro_restful_client import StatusKind
+from bitopro_util import get_current_timestamp
 from bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin, OrderStatus, WithdrawProtocol
 import bitopro_websocket_client as bitopro_ws
 

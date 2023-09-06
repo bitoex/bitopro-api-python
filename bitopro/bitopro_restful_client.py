@@ -17,6 +17,11 @@ class OrderStatus(Enum):
     Cancelled = 4
     PostOnlyCancelled = 6
 
+class StatusKind(Enum):
+    ALL = 0
+    OPEN = 1
+    DONE = 1
+
 class DepositStatus(Enum):
     CANCELLED = 0
     WAIT_PROCESS = 1
@@ -266,7 +271,7 @@ class BitoproRestfulClient(object):
         headers = build_headers(self.__api_key, self.__api_secret, params=orders_request)
         return self.send_request(method="POST", url=complete_url, headers=headers, data=orders_request)
 
-    def get_all_orders(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, status_kind:str="ALL", status:OrderStatus=None, order_id:str=None, limit:int=100, client_id:str=None):
+    def get_all_orders(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, ignoreTimeLimitEnable:bool=False, status_kind:StatusKind=StatusKind.ALL, status:OrderStatus=None, order_id:str=None, limit:int=100, client_id:str=None):
         """
         https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/all-order.md
         :param pair: the trading pair in format.
@@ -284,7 +289,8 @@ class BitoproRestfulClient(object):
         params = {
             **({"startTimestamp": str(start_timestamp)} if start_timestamp is not None else {}),
             **({"endTimestamp": str(end_timestamp)} if end_timestamp is not None else {}),
-            **({"statusKind": status_kind}),
+             **({"ignoreTimeLimitEnable": ignoreTimeLimitEnable}),
+            **({"statusKind": str(status_kind.name)} if status_kind is not None else {}),
             **({"status": str(status.value)} if status is not None else {}),
             **({"orderId": order_id} if order_id is not None else {}),
             **({"limit": str(limit)} if limit is not None else {}),
