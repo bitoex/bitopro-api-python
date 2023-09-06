@@ -61,15 +61,15 @@ def bitopro_restful_test():
         order_id = create_order_response["orderId"]
     print("Limit order created:", create_order_response)
 
+    # [POST] Create a market order
+    # create_order_response = bitopro_client.create_an_order(action="BUY", amount=34, pair="BTC_USDT", type=OrderType.Market)
+    # if create_order_response is not None:
+    #     order_id = create_order_response["orderId"]
+    # print("Market order created:", create_order_response)
+
     # [GET] Get an order
     get_an_order_response = bitopro_client.get_an_order(pair, order_id)
     print("Get an order:", get_an_order_response)
-
-    # [POST] Create a market order
-    create_order_response = bitopro_client.create_an_order(action="BUY", amount=34, pair="BTC_USDT", type=OrderType.Market)
-    if create_order_response is not None:
-        order_id = create_order_response["orderId"]
-    print("Market order created:", create_order_response)
 
     # [DELETE] Cancel the order
     if create_order_response is not None:
@@ -168,6 +168,7 @@ def bitopro_restful_test():
                 **({"price": str(10500)}),
                 **{"timestamp": get_current_timestamp()},
                 **{"type": "LIMIT"},
+                **{"clientId": 95279527}
              })
     create_batch_orders_response = bitopro_client.create_batch_order(batch_orders[pair])
     reply = None
