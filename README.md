@@ -2,7 +2,7 @@
 
 SDK for the [BitoPro](https://www.bitopro.com/) API.
 
-[Bitopro official API document](https://developer.bitopro.com/docs)
+[Bitopro official API document](https://github.com/bitoex/bitopro-offical-api-docs)
 
 ### Linux
 
