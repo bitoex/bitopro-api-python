@@ -245,6 +245,8 @@ def websocket_handler(message:str):
         print("TICKER: ", reply, end="\n\n")
     elif reply["event"] == "TRADE":
         print("TRADE: ", reply, end="\n\n")
+    elif reply["event"] == "USER_TRADE":
+        print("User trade: ", reply, end="\n\n")
         
 if __name__ == "__main__":
     bitopro_restful_test()
