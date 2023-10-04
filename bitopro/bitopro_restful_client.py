@@ -82,7 +82,7 @@ class BitoproRestfulClient(object):
     '''
     def get_currencies(self):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/currencies.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_currency_info.md#get-currency-info
        :return: the list of currencies
        """
        endpoint = f"/provisioning/currencies" 
@@ -91,7 +91,7 @@ class BitoproRestfulClient(object):
     
     def get_limitations_and_fees(self):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/lims-fees.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_limitations_and_fees.md
        :return: the limitations and fees
        """
        endpoint = f"/provisioning/limitations-and-fees" 
@@ -100,7 +100,7 @@ class BitoproRestfulClient(object):
     
     def get_order_book(self, pair:str=None, limit:int=5, scale:int=0):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/order-book.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_orderbook_data.md
        :param pair: the trading pair in format.
        :param limit: the limit for the response.
        :param scale: scale for the response. Valid scale values are different by pair.
@@ -116,7 +116,7 @@ class BitoproRestfulClient(object):
     
     def get_tickers(self, pair:str=None):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/tickers.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_ticker_data.md
        :param pair: the trading pair in format.
        :return: the ticker is a high level overview of the state of the market.
        """
@@ -126,7 +126,7 @@ class BitoproRestfulClient(object):
     
     def get_trades(self, pair:str=None):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/trades.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_trades_data.md
        :param pair: the trading pair in format.
        :return: a list of the most recent trades for the given symbol
        """
@@ -136,7 +136,7 @@ class BitoproRestfulClient(object):
     
     def get_candlestick(self, pair:str=None, resolution:CandlestickResolutin=CandlestickResolutin._1d, start_timestamp:int=None, end_timestamp:int=None):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/trading-history.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_ohlc_data.md
        :param pair: the trading pair in format.
        :param resolution: the timeframe of the candlestick chart.
        :param start_timestamp: start time in unix timestamp.
@@ -154,7 +154,7 @@ class BitoproRestfulClient(object):
     
     def get_trading_pairs(self):
        """
-       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/open/trading-pairs.md
+       https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_trading_pair_info.md
        :return: a list of pairs available for trade
        """
        endpoint = f"/provisioning/trading-pairs" 
@@ -167,7 +167,7 @@ class BitoproRestfulClient(object):
     '''
     def get_account_balance(self):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/account-balance.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_account_balance.md
         :return: the account balance
         """
         endpoint = "/accounts/balance"
@@ -178,7 +178,7 @@ class BitoproRestfulClient(object):
 
     def cancel_an_order(self, order_id:str, pair:str=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/cancel-batch.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/cancel_an_order.md
         :param pair: the trading pair in format.
         :param order_id: the id of the order.
         """
@@ -190,7 +190,7 @@ class BitoproRestfulClient(object):
 
     def cancel_all_orders(self, pair:str=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/cancel-all.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/cancel_all_orders.md
         :param pair: the trading pair in format.
         :cancel all your active orders of all pairs.
         """
@@ -202,7 +202,7 @@ class BitoproRestfulClient(object):
 
     def cancel_multiple_orders(self, orders_request:dict=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/cancel-batch.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/cancel_batch_orders.md
         :param orders_request: multiple orders will be canceled
         :send a json format request to cancel multiple orders at a time.
         :example: {"BTC_USDT": ["12234566","12234567"],"ETH_USDT": ["44566712","24552212"]}
@@ -214,7 +214,7 @@ class BitoproRestfulClient(object):
 
     def create_an_order(self, action:str, amount:float, price:float=None, type:OrderType=OrderType.Limit, pair:str=None, stop_price:float=None, condition:str=None, time_in_force:TimeInForce=TimeInForce.GTC, client_id:int=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/create-order.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/create_an_order.md
         :param pair: the trading pair in format.
         :param action: the action type of the order.	
         :param amount: the amount of the order for the trading pair, please follow the link to see the limitations.
@@ -244,7 +244,7 @@ class BitoproRestfulClient(object):
 
     def create_batch_order(self, orders_request:list=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/create-batch-limitmarket.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/create_batch_orders.md
         :param orders_request: multiple orders will be created
         :example:
         [
@@ -273,7 +273,7 @@ class BitoproRestfulClient(object):
 
     def get_all_orders(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, ignoreTimeLimitEnable:bool=False, status_kind:StatusKind=StatusKind.ALL, status:OrderStatus=None, order_id:str=None, limit:int=100, client_id:str=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/all-order.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_orders_data.md
         :param pair: the trading pair in format.
         :param start_timestamp: start time in unix timestamp.
         :param end_timestamp: end time in unix timestamp.
@@ -302,7 +302,7 @@ class BitoproRestfulClient(object):
 
     def get_an_order(self, pair:str=None, order_id:str=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/get-order.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_an_order_data.md
         :param pair: the trading pair in format.
         :param order_id: the id of the order.	
         :return: an order infomation
@@ -315,7 +315,7 @@ class BitoproRestfulClient(object):
 
     def get_trades_list(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, order_id:str=None, trade_id:str=None, limit:int=100):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/all-trade.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_trades_data.md
         :param pair: the trading pair in format.
         :param start_timestamp: start time in unix timestamp.
         :param end_timestamp: end time in unix timestamp.
@@ -339,7 +339,7 @@ class BitoproRestfulClient(object):
 
     def get_deposit_history(self, currency:str, start_timestamp:int=None, end_timestamp:int=None, limit:int=None, id:str=None, statuses:DepositStatus=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/get-deposit-history.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_deposit_invoices_data.md
         :param currency: the currency of the deposit to get.
         :param start_timestamp: start time in unix timestamp.
         :param end_timestamp: end time in unix timestamp.
@@ -363,7 +363,7 @@ class BitoproRestfulClient(object):
 
     def get_withdraw_history(self, currency:str, start_timestamp:int=None, end_timestamp:int=None, limit:int=None, id:str=None, statuses:DepositStatus=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/get-withdraw-history.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_withdraw_invoices_data.md
         :param currency: the currency of the withdraw to get.
         :param start_timestamp: start time in unix timestamp.
         :param end_timestamp: end time in unix timestamp.
@@ -387,7 +387,7 @@ class BitoproRestfulClient(object):
 
     def get_withdraw(self, currency:str, serial:str=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/get-withdraw.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/get_an_withdraw_invoice_data.md
         :param currency: the currency of the withdraw to get.
         :param serial: the serial of the withdraw.
         :return: the withdraw information
@@ -400,7 +400,7 @@ class BitoproRestfulClient(object):
 
     def withdraw(self, currency:str, protocol:WithdrawProtocol=WithdrawProtocol.MAIN, address:str=None, amount:float=None, message:str=None):
         """
-        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/v3-1/rest-1/auth/withdraw.md
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/private/create_an_withdraw_invoice.md
         :param currency: the currency to withdraw.
         :param protocol: the protocol to send.
         :param address: the address or bank account to send fund.
