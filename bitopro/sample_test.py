@@ -22,7 +22,7 @@ def bitopro_restful_test():
 
     # [GET] limitations and fees
     response = bitopro_client.get_limitations_and_fees()
-    print("List of currencies: ", response)
+    print("List limitations and fees: ", response)
     
     # [GET] order book
     pair = "BTC_USDT"
@@ -247,6 +247,8 @@ def websocket_handler(message:str):
         print("TRADE: ", reply, end="\n\n")
     elif reply["event"] == "USER_TRADE":
         print("User trade: ", reply, end="\n\n")
+    else:
+        print("Else: ", reply, end="\n\n")
         
 if __name__ == "__main__":
     bitopro_restful_test()
