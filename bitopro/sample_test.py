@@ -233,6 +233,11 @@ def bitopro_websocket_test():
     bito_websocket_user_balance.init_websocket()
     bito_websocket_user_balance.start()
 
+    # [Private] GET user trade
+    bito_websocket_user_trade = bitopro_ws.BitoproUserTradeWs(account, apiKey, apiSecret, websocket_handler)
+    bito_websocket_user_trade.init_websocket()
+    bito_websocket_user_trade.start()
+
 def websocket_handler(message:str):
     reply = json.loads(message)
     if reply["event"] == "ACCOUNT_BALANCE":
