@@ -4,7 +4,7 @@ import threading
 import time
 from loguru import logger
 import websocket
-from bitopro_util import build_headers,get_current_timestamp
+from .bitopro_util import build_headers,get_current_timestamp
 
 BitoproWebsocketEndpoint = "wss://stream.bitopro.com:443/ws"
 

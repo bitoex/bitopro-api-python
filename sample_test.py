@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-from bitopro_restful_client import StatusKind
-from bitopro_util import get_current_timestamp
-from bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin, OrderStatus, WithdrawProtocol
-import bitopro_websocket_client as bitopro_ws
+from bitopro.bitopro_restful_client import StatusKind
+from bitopro.bitopro_util import get_current_timestamp
+from bitopro.bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin, OrderStatus, WithdrawProtocol
+import bitopro.bitopro_websocket_client as bitopro_ws
 
 account = ""
 apiKey = ""
@@ -256,7 +256,7 @@ def websocket_handler(message:str):
         print("Else: ", reply, end="\n\n")
         
 if __name__ == "__main__":
-    bitopro_restful_test()
+    # bitopro_restful_test()
     bitopro_websocket_test()
 
     

@@ -2,7 +2,7 @@
 from enum import Enum
 import requests
 
-from bitopro_util import build_headers, get_current_timestamp
+from .bitopro_util import build_headers, get_current_timestamp
 
 class OrderType(Enum):
     Limit = 0,
