@@ -221,8 +221,8 @@ class BitoproRestfulClient(object):
         :param price: the price of the order for the trading pair.	
         :param type: the order type.
         :param stop_price: the price to trigger stop limit order, only required when type is STOP_LIMIT.
-        :param condition: the condition to match stop price, only required when type is STOP_LIMIT.
-        :param time_in_force: condition for orders.
+        :param condition: the condition to match stop price, only required when type is STOP_LIMIT(>=, <=). Example: "<="
+        :param time_in_force: time in force condition for orders. If type is MARKET, this will always be GTC
         :param client_id: this information help users distinguish their orders.
         :return: a dict contains an order info
         """
@@ -289,7 +289,7 @@ class BitoproRestfulClient(object):
         params = {
             **({"startTimestamp": str(start_timestamp)} if start_timestamp is not None else {}),
             **({"endTimestamp": str(end_timestamp)} if end_timestamp is not None else {}),
-             **({"ignoreTimeLimitEnable": ignoreTimeLimitEnable}),
+            **({"ignoreTimeLimitEnable": ignoreTimeLimitEnable}),
             **({"statusKind": str(status_kind.name)} if status_kind is not None else {}),
             **({"status": str(status.value)} if status is not None else {}),
             **({"orderId": order_id} if order_id is not None else {}),
@@ -411,6 +411,7 @@ class BitoproRestfulClient(object):
         complete_url = self.baseUrl + endpoint
         params = {
             **{"protocol": protocol.name},
+            **{"address": address},
             **({"amount": str(amount)} if amount is not None else {}),
             **{"timestamp": get_current_timestamp()},
             **({"message": message} if message is not None else {}),

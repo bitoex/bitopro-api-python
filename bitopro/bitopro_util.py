@@ -9,7 +9,7 @@ def get_current_timestamp() -> int:
         return int(time.time() * 1000)
 
 
-def build_payload(params={}) -> bytes:
+def build_payload(params:dict) -> bytes:
     return base64.urlsafe_b64encode(json.dumps(params).encode("utf-8")).decode("utf-8")
 
 
