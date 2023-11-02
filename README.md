@@ -4,6 +4,12 @@ SDK for the [BitoPro](https://www.bitopro.com/) API.
 
 [Bitopro official API document](https://github.com/bitoex/bitopro-offical-api-docs)
 
+### Installation
+
+```bash
+pip install bitopro-client
+```
+
 ### Linux
 
 ```bash
