@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-from bitoproClient.bitopro_restful_client import StatusKind
 from bitoproClient.bitopro_util import get_current_timestamp
 from bitoproClient.bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin, OrderStatus, WithdrawProtocol
 import bitoproClient.bitopro_websocket_client as bitopro_ws
