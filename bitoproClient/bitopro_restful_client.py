@@ -37,7 +37,7 @@ class TimeInForce(Enum):
     GTC = 0,
     POST_ONLY = 1
 
-class CandlestickResolutin(Enum):
+class CandlestickResolution(Enum):
     _1m = 0, 
     _5m = 1, 
     _15m = 2, 
@@ -134,7 +134,7 @@ class BitoproRestfulClient(object):
        complete_url = self.baseUrl + endpoint
        return self.send_request(method="GET", url=complete_url)
     
-    def get_candlestick(self, pair:str=None, resolution:CandlestickResolutin=CandlestickResolutin._1d, start_timestamp:int=None, end_timestamp:int=None):
+    def get_candlestick(self, pair:str=None, resolution:CandlestickResolution=CandlestickResolution._1d, start_timestamp:int=None, end_timestamp:int=None):
        """
        https://github.com/bitoex/bitopro-offical-api-docs/blob/master/api/v3/public/get_ohlc_data.md
        :param pair: the trading pair in format.

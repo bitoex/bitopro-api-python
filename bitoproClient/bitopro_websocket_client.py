@@ -103,4 +103,10 @@ class BitoproUserTradeWs(BitoproExWebsocket):
         super().__init__(account, api_key, api_secret, callback)
 
         self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/user-trades"
+
+class BitoproHistoryOrders(BitoproExWebsocket):
+    def __init__(self, account: str, api_key: str, api_secret: str, callback):
+        super().__init__(account, api_key, api_secret, callback)
+
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/orders/histories"
         

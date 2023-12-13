@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from bitoproClient.bitopro_util import get_current_timestamp
-from bitoproClient.bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin, OrderStatus, WithdrawProtocol
+from bitoproClient.bitopro_restful_client import BitoproRestfulClient, CandlestickResolution, OrderStatus, WithdrawProtocol
 import bitoproClient.bitopro_websocket_client as bitopro_ws
 
 account = ""
@@ -37,7 +37,7 @@ def bitopro_restful_test():
     print("Trades: ", response)
 
     # [GET] candlestick
-    response = bitopro_client.get_candlestick(pair, CandlestickResolutin._1d, 1650707415, 1678355415)
+    response = bitopro_client.get_candlestick(pair, CandlestickResolution._1d, 1650707415, 1678355415)
     print("Candlestick: ", response)
 
     # [GET] trading pairs
@@ -237,6 +237,11 @@ def bitopro_websocket_test():
     bito_websocket_user_trade.init_websocket()
     bito_websocket_user_trade.start()
 
+    # [Private] GET history orders
+    bito_websocket_history_orders = bitopro_ws.BitoproHistoryOrders(account, apiKey, apiSecret, websocket_handler)
+    bito_websocket_history_orders.init_websocket()
+    bito_websocket_history_orders.start()
+
 def websocket_handler(message:str):
     reply = json.loads(message)
     if reply["event"] == "ACCOUNT_BALANCE":
@@ -251,11 +256,13 @@ def websocket_handler(message:str):
         print("TRADE: ", reply, end="\n\n")
     elif reply["event"] == "USER_TRADE":
         print("User trade: ", reply, end="\n\n")
+    elif reply["event"] == "RECENT_HISTORY_ORDERS":
+        print("History orders: ", reply, end="\n\n")
     else:
         print("Else: ", reply, end="\n\n")
         
 if __name__ == "__main__":
-    bitopro_restful_test()
+    # bitopro_restful_test()
     bitopro_websocket_test()
 
     
