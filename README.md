@@ -64,7 +64,7 @@ Checkout the [official settings](https://www.bitopro.com/fees) of minimum amount
 ### Public restful enpoint example
 
 ```python
-from bitopro_restful_client import BitoproRestfulClient, CandlestickResolutin
+from bitopro_restful_client import BitoproRestfulClient, CandlestickResolution
 
 if __name__ == '__main__':
     bitopro_client = BitoproRestfulClient('apiKey', 'apiSecret')
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     print("Trades: ", response)
 
     # [GET] candlestick
-    response = bitopro_client.get_candlestick(pair, CandlestickResolutin._1d, 1650707415, 1678355415)
+    response = bitopro_client.get_candlestick(pair, CandlestickResolution._1d, 1650707415, 1678355415)
     print("Candlestick: ", response)
 
     # [GET] trading pairs

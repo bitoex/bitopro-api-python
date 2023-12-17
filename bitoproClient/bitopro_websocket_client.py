@@ -6,7 +6,7 @@ from loguru import logger
 import websocket
 from .bitopro_util import build_headers,get_current_timestamp
 
-BitoproWebsocketEndpoint = "wss://stream.bitopro.com:443/ws"
+BitoproWebsocketEndpoint = "wss://stream.bitopro.com:443/ws/v1"
 
 class BitoproExWebsocket():
     def __init__(self, account:str, api_key:str, api_secret:str, callback):
@@ -23,7 +23,7 @@ class BitoproExWebsocket():
         
     def init_websocket(self):
         if self._account and self._api_key and self._api_secret:
-            params = {"identity": self._account, "nonce": get_current_timestamp()}
+            params = {"identity": self._account, "nonce": ""}
             ws_headers = build_headers(self._api_key, self._api_secret, params=params)
         else:
             ws_headers = None
@@ -51,10 +51,10 @@ class BitoproExWebsocket():
         self.callback(message)
 
     def _on_close(self, ws, close_status_code, msg):
-        self.init_websocket()
         log_message = f"{self._connect_endpoint} closed connection, reconnecting...\n"
         logger.info(log_message)
         time.sleep(3)
+        self.init_websocket()
         self.wst.start()
 
     def _on_error(self, ws, error):
@@ -63,7 +63,7 @@ class BitoproExWebsocket():
 class BitoproOrderBookWs(BitoproExWebsocket):
     def __init__(self, symbols_limit: dict, callback):
         super().__init__("", "", "", callback)
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/order-books/"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/order-books/"
         for symbol, limit in symbols_limit.items():
             self._connect_endpoint = self._connect_endpoint + f"{str.lower(symbol)}:{limit},"
         self._connect_endpoint = self._connect_endpoint[:-1]  # remove last ','
@@ -72,7 +72,7 @@ class BitoproTickerkWs(BitoproExWebsocket):
     def __init__(self, symbols: list, callback):
         super().__init__("", "", "", callback)
 
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/tickers/"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/tickers/"
         for symbol in symbols:
             self._connect_endpoint = self._connect_endpoint + f"{str.lower(symbol)},"
         self._connect_endpoint = self._connect_endpoint[:-1]  # remove last ','
@@ -81,7 +81,7 @@ class BitoproTradesWs(BitoproExWebsocket):
     def __init__(self, symbols: list, callback):
         super().__init__("", "", "", callback)
 
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/trades/"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/trades/"
         for symbol in symbols:
             self._connect_endpoint = self._connect_endpoint + f"{str.lower(symbol)},"
         self._connect_endpoint = self._connect_endpoint[:-1]  # remove last ','
@@ -90,23 +90,23 @@ class BitoproUserOrdersWs(BitoproExWebsocket):
     def __init__(self, account: str, api_key: str, api_secret: str, callback):
         super().__init__(account, api_key, api_secret, callback)
 
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/orders"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/auth/orders"
 
 class BitoproUserBlanceWs(BitoproExWebsocket):
     def __init__(self, account: str, api_key: str, api_secret: str, callback):
         super().__init__(account, api_key, api_secret, callback)
 
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/account-balance"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/auth/account-balance"
         
 class BitoproUserTradeWs(BitoproExWebsocket):
     def __init__(self, account: str, api_key: str, api_secret: str, callback):
         super().__init__(account, api_key, api_secret, callback)
 
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/user-trades"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/auth/user-trades"
 
 class BitoproHistoryOrders(BitoproExWebsocket):
     def __init__(self, account: str, api_key: str, api_secret: str, callback):
         super().__init__(account, api_key, api_secret, callback)
 
-        self._connect_endpoint = BitoproWebsocketEndpoint + "/v1/pub/auth/orders/histories"
+        self._connect_endpoint = BitoproWebsocketEndpoint + "/pub/auth/orders/histories"
         
