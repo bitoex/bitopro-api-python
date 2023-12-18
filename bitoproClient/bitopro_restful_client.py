@@ -31,7 +31,8 @@ class WithdrawProtocol(Enum):
     ERC20 = 1, 
     OMNI = 2, 
     TRX = 3, 
-    BSC = 4
+    BSC = 4,
+    POLYGON = 5
 
 class TimeInForce(Enum):
     GTC = 0,

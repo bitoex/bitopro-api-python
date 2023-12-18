@@ -1,3 +1,7 @@
 loguru==0.6.0
+numpy==1.26.2
+pandas==2.1.4
+pandas_ta==0.3.14b
 Requests==2.31.0
+setuptools==68.1.2
 websocket_client==1.5.1
