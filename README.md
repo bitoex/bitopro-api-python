@@ -343,14 +343,14 @@ if __name__ == '__main__':
 ```python
 from datetime import datetime, timezone
 
-from bitoproClient.bitopro_restful_client import CandlestickResolutin
+from bitoproClient.bitopro_restful_client import CandlestickResolution
 from bitoproClient.bitopro_indicator import indicator
 
 def strategy(base, quote):
     pair = f"{base.lower()}_{quote.lower()}"
     signal_entry_long: bool = False
     signal_exit_long: bool = False
-    resolution = CandlestickResolutin._1d
+    resolution = CandlestickResolution._1d
     dt_string = '2023/01/01 00:00:00'
     start_ts = int(datetime.strptime(dt_string, "%Y/%m/%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
     end_ts = int(datetime.now(timezone.utc).timestamp())
