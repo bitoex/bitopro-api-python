@@ -2,6 +2,8 @@
 import asyncio
 from ccxt.bitopro import bitopro as rest_bito
 from ccxt.pro.bitopro import bitopro as ws_bito
+from typing import List
+from ccxt.base.types import Balances, Int, Market, OrderBook, Str, Ticker, Trade
 
 account = ""
 api_key = ""
@@ -117,7 +119,7 @@ def ccxt_websocket_sample():
 async def watch_order_book_info(pair:str, bitopro_ws:ws_bito):  
     while True:
         try:
-            orderbook = await bitopro_ws.watch_order_book(pair)
+            orderbook:OrderBook = await bitopro_ws.watch_order_book(pair)
             print(f"orderbook: {orderbook}\n")
         except Exception as e:
             print(type(e).__name__, str(e))
@@ -127,7 +129,7 @@ async def watch_order_book_info(pair:str, bitopro_ws:ws_bito):
 async def watch_ticker_info(pair:str, bitopro_ws:ws_bito):
     while True:
         try:
-            ticker = await bitopro_ws.watch_ticker(pair)
+            ticker:Ticker = await bitopro_ws.watch_ticker(pair)
             print(f"ticker: {ticker}\n")
         except Exception as e:
             print(type(e).__name__, str(e))
@@ -137,7 +139,7 @@ async def watch_ticker_info(pair:str, bitopro_ws:ws_bito):
 async def watch_trade_info(pair:str, bitopro_ws:ws_bito):
     while True:
         try:
-            trade = await bitopro_ws.watch_trades(pair)
+            trade:List[Trade] = await bitopro_ws.watch_trades(pair)
             print(f"trade: {trade}\n")
         except Exception as e:
             print(type(e).__name__, str(e))
@@ -147,7 +149,7 @@ async def watch_trade_info(pair:str, bitopro_ws:ws_bito):
 async def watch_balance_info(bitopro_ws:ws_bito):
     while True:
         try:
-            balance = await bitopro_ws.watch_balance()
+            balance:Balances = await bitopro_ws.watch_balance()
             print(f"balance: {balance}\n")
         except Exception as e:
             print(type(e).__name__, str(e))
@@ -157,7 +159,7 @@ async def watch_balance_info(bitopro_ws:ws_bito):
 async def watch_my_trades_info(pair:str, bitopro_ws:ws_bito):
     while True:
         try:
-            my_trades = await bitopro_ws.watch_my_trades(pair)
+            my_trades:List[Trade] = await bitopro_ws.watch_my_trades(pair)
             print(f"my trades: {my_trades}\n")
         except Exception as e:
             print(type(e).__name__, str(e))
