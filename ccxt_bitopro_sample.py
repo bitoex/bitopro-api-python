@@ -107,13 +107,15 @@ def ccxt_websocket_sample():
     bitopro_ws.login = account
     bitopro_ws.apiKey = api_key
     bitopro_ws.secret = api_secret
+
+    loop = asyncio.new_event_loop()
     tasks = []
-    tasks.append(watch_order_book_info(pair, bitopro_ws))
-    tasks.append(watch_ticker_info(pair, bitopro_ws))
-    tasks.append(watch_trade_info(pair, bitopro_ws))
-    tasks.append(watch_balance_info(bitopro_ws))
-    tasks.append(watch_my_trades_info(pair, bitopro_ws))
-    asyncio.run(asyncio.wait(tasks))
+    tasks.append(loop.create_task(watch_order_book_info(pair, bitopro_ws)))
+    tasks.append(loop.create_task(watch_ticker_info(pair, bitopro_ws)))
+    tasks.append(loop.create_task(watch_trade_info(pair, bitopro_ws)))
+    tasks.append(loop.create_task(watch_balance_info(bitopro_ws)))
+    tasks.append(loop.create_task(watch_my_trades_info(pair, bitopro_ws)))
+    loop.run_until_complete(asyncio.wait(tasks))
 
 # public order book info
 async def watch_order_book_info(pair:str, bitopro_ws:ws_bito):  
