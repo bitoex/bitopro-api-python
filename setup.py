@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 HERE = pathlib.Path(__file__).parent.resolve()
 
 setup(name='bitopro-client',
-    version='1.0.4',
+    version='1.0.5',
     description='For BitoPro crypto currency exchange written in Python',
     url='https://github.com/bitoex/bitopro-api-python.git',
     author='Bitoex',
