@@ -55,11 +55,18 @@ def bitopro_restful_test():
     order_id = ""
 
     # [POST] Create a limit order
-    create_order_response = bitopro_client.create_an_order(action="BUY", amount=0.0001, price=10500, pair=pair, client_id=587456)
-    if create_order_response is not None:
-        order_id = create_order_response["orderId"]
-    print("Limit order created:", create_order_response)
+    open_list = []
+    for i in range(5):
+        create_order_response = bitopro_client.create_an_order(action="BUY", amount=0.0001, price=50500, pair=pair)
+        if create_order_response is not None:
+            open_list.append(create_order_response["orderId"])
+        print("Limit order created:", create_order_response)
 
+    # [Get] get all open orders
+    open_orders_response = bitopro_client.get_open_orders(pair)
+    if open_orders_response is not None:
+        print("open orders:", open_orders_response)
+    
     # [POST] Create a market order
     # create_order_response = bitopro_client.create_an_order(action="BUY", amount=34, pair="BTC_USDT", type=OrderType.Market)
     # if create_order_response is not None:
@@ -67,14 +74,15 @@ def bitopro_restful_test():
     # print("Market order created:", create_order_response)
 
     # [GET] Get an order
-    get_an_order_response = bitopro_client.get_an_order(pair, order_id)
-    print("Get an order:", get_an_order_response)
+    for open_order in open_list:
+        get_an_order_response = bitopro_client.get_an_order(pair, open_order)
+        print("Get an order:", get_an_order_response)
 
     # [DELETE] Cancel the order
-    if create_order_response is not None:
-        order_id = create_order_response["orderId"]
-        cancel_order_response = bitopro_client.cancel_an_order(order_id=order_id, pair=pair)
+    for open_order in open_list:
+        cancel_order_response = bitopro_client.cancel_an_order(open_order, pair=pair)
         print("Order cancelled:", cancel_order_response)
+        
 
     # [GET] get all orders
     response = bitopro_client.get_all_orders(pair, start_timestamp=1679299428000, status=OrderStatus.Completed)

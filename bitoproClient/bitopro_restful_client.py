@@ -23,8 +23,12 @@ class StatusKind(Enum):
     DONE = 1
 
 class DepositStatus(Enum):
-    CANCELLED = 0
-    WAIT_PROCESS = 1
+    CANCELLED = 0,
+    WAIT_PROCESS = 1,
+    PROCESSING = 2,
+    COMPLETE = 3,
+    EXPIRED = 4,
+    INVALID = 5,
 
 class WithdrawProtocol(Enum):
     MAIN = 0,
@@ -313,6 +317,23 @@ class BitoproRestfulClient(object):
         header = {"identity": "", "nonce": get_current_timestamp()}
         headers = build_headers(self.__api_key, self.__api_secret, params=header)
         return self.send_request(method="GET", url=complete_url, headers=headers)
+    
+    def get_open_orders(self, pair:str=None):
+        """
+        https://github.com/bitoex/bitopro-offical-api-docs/blob/add_list_open_orders_doc/api/v3/private/get_open_orders_data.md
+        :param pair: the trading pair in format.
+        :param order_id: the id of the order.	
+        :return: all open orders and descending ordered by updated time
+        """   
+        endpoint = f"/orders/open"
+        complete_url = self.baseUrl + endpoint
+        params = {
+            **({"pair": pair} if pair is not None else {}),
+        }
+
+        header = {"identity": "", "nonce": get_current_timestamp()}
+        headers = build_headers(self.__api_key, self.__api_secret, params=header)
+        return self.send_request(method="GET", url=complete_url, headers=headers, data=params)
 
     def get_trades_list(self, pair:str=None, start_timestamp:int=None, end_timestamp:int=None, order_id:str=None, trade_id:str=None, limit:int=100):
         """
