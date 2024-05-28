@@ -23,7 +23,7 @@ class BitoproExWebsocket():
         
     def init_websocket(self):
         if self._account and self._api_key and self._api_secret:
-            params = {"identity": self._account, "nonce": ""}
+            params = {"identity": self._account, "nonce": get_current_timestamp()}
             ws_headers = build_headers(self._api_key, self._api_secret, params=params)
         else:
             ws_headers = None

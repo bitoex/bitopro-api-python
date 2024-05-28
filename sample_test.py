@@ -57,7 +57,7 @@ def bitopro_restful_test():
     # [POST] Create a limit order
     open_list = []
     for i in range(5):
-        create_order_response = bitopro_client.create_an_order(action="BUY", amount=0.0001, price=50500, pair=pair)
+        create_order_response = bitopro_client.create_an_order(action="BUY", amount=0.0001, price=30500, pair=pair, client_id=223445)
         if create_order_response is not None:
             open_list.append(create_order_response["orderId"])
         print("Limit order created:", create_order_response)
